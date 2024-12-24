@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}إضافة مستفيد{% endblock %}
+
+{% block main %}
+<h1>إضافة مستفيد جديد</h1>
+<form action="/add_beneficiary" method="POST">
+    <div class="mb-3">
+        <label for="beneficiary_name" class="form-label">اسم المستفيد</label>
+        <input type="text" class="form-control" id="beneficiary_name" name="beneficiary_name" required>
+    </div>
+<div class="mb-3">
+    <label for="contact_number" class="form-label">رقم الهاتف</label>
+    <input type="tel"
+           class="form-control"
+           id="contact_number"
+           name="contact_number"
+           required
+           maxlength="11"
+           pattern="\d{11}"
+           title="يجب إدخال 11 رقمًا فقط">
+</div>
+    <div class="mb-3">
+        <label for="national_id" class="form-label">رقم الهوية</label>
+        <input type="text" class="form-control" id="national_id" name="national_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">العنوان</label>
+        <input type="text" class="form-control" id="address" name="address" required>
+    </div>
+    <div class="mb-3">
+        <label for="family_members" class="form-label">عدد أفراد الأسرة</label>
+        <input type="number" class="form-control" id="family_members" name="family_members" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">إضافة مستفيد</button>
+</form>
+{% endblock %}

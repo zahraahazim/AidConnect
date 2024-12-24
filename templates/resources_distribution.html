@@ -1,0 +1,257 @@
+{% extends "layout.html" %}
+
+{% block title %}ادارة الموارد{% endblock %}
+
+{% block main %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ادارة الموارد</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery (Full version) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<h1 class="mb-4">ادارة الموارد</h1>
+
+<!-- Flash messages -->
+
+<form method="POST" class="mb-4">
+    <label for="resource_name">اسم المورد:</label>
+    <input type="text" name="resource_name" class="form-control mb-2" required>
+    <label for="item_name">اسم المادة:</label>
+    <input type="text" name="item_name" class="form-control mb-2" required>
+    <label for="quantity">الكمية:</label>
+    <input type="text" name="quantity" class="form-control mb-2" required
+    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');">
+ <button type="submit" class="btn btn-info">إضافة مورد</button>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+                    <tr>
+            <th>اسم المورد</th>
+            <th>اسم المادة</th>
+            <th>الكمية المتاحة</th>
+            <th>اختيار المستفيدين</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for resource in resources %}
+        <tr>
+            <td>{{ resource.doner }}</td>
+            <td>{{ resource.resource_name }}</td>
+            <td>{{ resource.quantity}}</td>
+            <td>
+                <button type="button" class="btn btn-info" onclick="showNonBeneficiaries('{{ resource.resource_name }}', {{ resource.id }}, {{ resource.quantity }})">اختيار المستفيدين</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- Modal to display non-beneficiaries -->
+<div class="modal fade" id="nonBeneficiariesModal" tabindex="-1" role="dialog" aria-labelledby="nonBeneficiariesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nonBeneficiariesModalLabel">اختيار المستفيدين</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/distribute">
+                    <input type="hidden" name="resource_id" id="resource_id">
+                    <input type="hidden" name="resource_name" id="resource_name">
+                    <input type="hidden" name="date" value="{{ current_date }}">
+                    <input type="hidden" name="org" value="{{ org_name }}">
+
+                    <table class="table table-striped text-center" id="nonBeneficiariesTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>الاسم</th>
+                                <th>عدد أفراد الأسرة</th>
+                                <th>العنوان</th>
+                                <th>رقم الهوية</th>
+                                <th>الكمية المخصصة</th>
+                                <th>المتبرع به سابقا</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- سيتم إدراج المحتوى ديناميكياً -->
+                        </tbody>
+                    </table>
+                    <p class="font-weight-bold">الكمية المتبقية: <span id="remainingQuantity" class="text-danger"></span></p>
+                    <button type="button" id="distributeButton" class="btn btn-success" onclick="distributeResources()">توزيع الموارد</button>
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function showNonBeneficiaries(resourceName, resourceId, initialQuantity) {
+        // Set the hidden fields with the resource info
+        document.getElementById('resource_id').value = resourceId;
+        document.getElementById('resource_name').value = resourceName;
+
+        // Show the modal
+        $('#nonBeneficiariesModal').modal('show');
+
+        // Fetch and populate the non-beneficiaries table
+        fetchNonBeneficiaries(resourceName, resourceId, initialQuantity);
+    }
+
+    function fetchNonBeneficiaries(resourceName, resourceId, initialQuantity) {
+        fetch(`/get_non_beneficiaries?resource_id=${resourceId}`)
+            .then(response => response.json())
+            .then(data => {
+                let table = document.getElementById('nonBeneficiariesTable').getElementsByTagName('tbody')[0];
+                table.innerHTML = ''; // Clear previous rows
+
+                data.forEach(beneficiary => {
+                    let row = table.insertRow();
+                    let nameCell = row.insertCell(0);
+                    let familyCell = row.insertCell(1);
+                    let addressCell = row.insertCell(2);
+                    let nationalIdCell = row.insertCell(3);
+                    let quantityCell = row.insertCell(4);
+                    let allocatedCell = row.insertCell(5);
+
+                    nameCell.textContent = beneficiary.name;
+                    familyCell.textContent = beneficiary.family_members;
+                    addressCell.textContent = beneficiary.address;
+                    nationalIdCell.textContent = beneficiary.national_id || 'غير متوفر';
+
+                    // Create an input for the user to enter the quantity they want to distribute
+                    let input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '0';
+                    input.max = initialQuantity;
+                    input.value = '0';
+                    input.onchange = function() {
+                        updateRemainingQuantity(initialQuantity);
+                    };
+                    quantityCell.appendChild(input);
+
+                    // Display the quantity that was allocated previously (if any)
+
+                    quantityCell.appendChild(input);
+
+                    // عرض الكمية التي تم تخصيصها سابقًا مع الفواصل
+                    allocatedCell.textContent = (beneficiary.quantity || 0).toLocaleString();
+                });
+                document.getElementById('remainingQuantity').innerText = initialQuantity;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateRemainingQuantity(initialQuantity) {
+        let table = document.getElementById('nonBeneficiariesTable');
+        let inputs = table.querySelectorAll('input[type="number"]');
+        let totalDonated = Array.from(inputs).reduce((sum, input) => sum + parseInt(input.value || 0), 0);
+        let remaining = initialQuantity - totalDonated;
+        document.getElementById('remainingQuantity').innerText = Math.max(0, remaining);
+    }
+
+    function distributeResources() {
+        let quantities = [];
+        let nationalIds = [];
+
+        let table = document.getElementById('nonBeneficiariesTable');
+        let rows = table.getElementsByTagName('tr');
+        for (let row of rows) {
+            let input = row.querySelector('input[type="number"]');
+            if (input) {
+                let quantity = parseInt(input.value || 0, 10);
+                if (quantity > 0) {
+                    quantities.push(quantity);
+                    let nationalId = row.querySelector('td:nth-child(4)').textContent; // Assuming `national_id` is in the 4th column
+                    if (nationalId) {
+                        nationalIds.push(nationalId.trim());
+                    }
+                }
+            }
+        }
+        if (quantities.length !== nationalIds.length) {
+            displayAlertInModal('تأكد من إدخال الكميات وأرقام الهويات بشكل صحيح.', 'danger');
+            return;
+        }
+
+        // Send the data to the server
+        fetch('/distribute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'quantities': quantities.join(','),
+                'national_ids': nationalIds.join(','),
+                'resource_id': document.getElementById('resource_id').value,
+                'resource_name': document.getElementById('resource_name').value,
+                'date': document.querySelector('input[name="date"]').value,
+                'org': document.querySelector('input[name="org"]').value,
+            })
+        }).then(response => response.json())
+        .then(data => {
+            if (data.status === 'error') {
+                displayAlertInModal(data.message, 'danger');
+            } else if (data.status === 'success') {
+                displayAlertInModal(data.message, 'success');
+                // Reload the page after a short delay to show the updated data
+                setTimeout(() => {
+                    location.reload();
+                }, 2000); // 2 seconds delay before reloading
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            displayAlertInModal('حدث خطأ أثناء توزيع الموارد', 'danger');
+        });
+    }
+
+
+    // Function to display alert inside the modal
+    function displayAlertInModal(message, type) {
+        // Check if an alert already exists in the modal
+        let existingAlert = document.getElementById('modalAlert');
+        if (existingAlert) {
+            existingAlert.remove();  // Remove the previous alert if it exists
+        }
+
+        // Create a new alert
+        let alert = document.createElement('div');
+        alert.id = 'modalAlert';
+        alert.classList.add('alert', `alert-${type}`);
+        alert.innerText = message;
+
+        // Add the alert to the modal's body
+        let modalBody = document.querySelector('#nonBeneficiariesModal .modal-body');
+        modalBody.insertBefore(alert, modalBody.firstChild);  // Insert at the top of the modal body
+
+        // Remove the alert after 5 seconds
+        setTimeout(() => alert.remove(), 5000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const quantityCells = document.querySelectorAll("td:nth-child(3)");
+        quantityCells.forEach(cell => {
+            const number = parseInt(cell.textContent, 10);
+            if (!isNaN(number)) {
+                cell.textContent = number.toLocaleString('en-US');
+            }
+        });
+    });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}تسجيل الدخول{% endblock %}
+
+{% block main %}
+<h1>تسجيل الدخول</h1>
+<form action="/login" method="POST">
+    <div class="mb-3">
+        <label for="username" class="form-label">اسم المستخدم</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">كلمة المرور</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+</form>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}الموارد المستلمة{% endblock %}
+
+{% block main %}
+<h1>الموارد المستلمة</h1>
+{% if resources %}
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>التأريخ</th>
+                <th>المتبرع</th>
+                <th>النوع</th>
+                <th>الكمية</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resource in resources %}
+            <tr>
+                <td>{{ resource['date'] }}</td>
+                <td>{{ resource['doner'] }}</td>
+                <td>{{ resource['resource_name'] }}</td>
+                <td>{{ resource['quantity'] | comma }}</td> <!-- إضافة الفلتر هنا -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>لم يتم استلام أي موارد لهذا المستفيد.</p>
+{% endif %}
+<a href="{{ url_for('show_beneficiaries') }}" class="btn btn-secondary">عودة</a>
+{% endblock %}

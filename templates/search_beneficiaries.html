@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}عرض المستفيدين{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">بحث مستفيدين</h1>
+
+    <div class="mb-4">
+        <form method="POST" class="d-flex gap-2 align-items-center">
+            <input
+                type="text"
+                name="search_term"
+                class="form-control"
+                placeholder="بحث حسب الاسم أو رقم الهوية"
+                required>
+            <button type="submit" class="btn btn-info btn-sm">بحث</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>الاسم</th>
+                    <th>رقم الهوية الوطنية</th>
+                    <th>رقم الاتصال</th>
+                    <th>العنوان</th>
+                    <th>عدد أفراد الأسرة</th>
+                    <th>المنظمة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beneficiary in beneficiaries %}
+                    <tr>
+                        <td>{{ beneficiary.name }}</td>
+                        <td>{{ beneficiary.national_id }}</td>
+                        <td>{{ beneficiary.contact_number }}</td>
+                        <td>{{ beneficiary.address }}</td>
+                        <td>{{ beneficiary.family_members }}</td>
+                        <td>{{ beneficiary.org }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

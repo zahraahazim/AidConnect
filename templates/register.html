@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}التسجيل{% endblock %}
+
+{% block main %}
+<h1>إنشاء حساب جديد</h1>
+<form action="/register" method="POST">
+    <div class="mb-3">
+        <label for="username" class="form-label">اسم المستخدم</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">كلمة المرور</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="role" class="form-label">اختر الدور</label>
+        <select class="form-control" id="role" name="role" required onchange="toggleOrgNameField()">
+            <option selected value="ادارة">ادارة</option>
+            <option value="منظمة">منظمة</option>
+        </select>
+    </div>
+    <div class="mb-3" id="orgname-container" style="display: none;">
+        <label for="orgname" class="form-label">اسم المنظمة</label>
+        <input type="text" class="form-control" id="orgname" name="orgname">
+    </div>
+    <button type="submit" class="btn btn-primary">التسجيل</button>
+</form>
+
+<script>
+    function toggleOrgNameField() {
+        const role = document.getElementById("role").value;
+        const orgNameContainer = document.getElementById("orgname-container");
+        if (role === "منظمة") {
+            orgNameContainer.style.display = "block";
+            document.getElementById("orgname").setAttribute("required", "required");
+        } else {
+            orgNameContainer.style.display = "none";
+            document.getElementById("orgname").removeAttribute("required");
+        }
+    }
+</script>
+{% endblock %}

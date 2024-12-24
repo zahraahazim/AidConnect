@@ -1,0 +1,197 @@
+/* العلامة التجارية */
+nav .navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav .navbar-brand .blue {
+    color: #1e90ff; /* أزرق سماء صافيه */
+}
+
+nav .navbar-brand .red {
+    color: #ff6347; /* أحمر طماطم */
+}
+
+nav .navbar-brand .yellow {
+    color: #ffcc00; /* أصفر ذهبي */
+}
+
+nav .navbar-brand .green {
+    color: #32cd32; /* أخضر ليموني */
+}
+
+/* خلفية الجسم */
+body {
+    background: linear-gradient(135deg, #00bcd4, #1e90ff); /* تدرج من اللون السمائي إلى الأزرق */
+    color: #ffffff; /* لون النص */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* العناوين */
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+    color: #ffffff; /* لون أبيض */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* ظل مختلف */
+    margin-bottom: 20px;
+}
+
+/* الجدول */
+.table {
+    width: 90%;
+    margin: 20px auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #212529;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #6a5acd; /* أرجواني مائل إلى الأزرق */
+    color: #ffffff; /* لون النص */
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(106, 90, 205, 0.1); /* لون جديد */
+}
+
+.table tbody tr:hover {
+    background-color: rgba(106, 90, 205, 0.2); /* لون جديد */
+}
+
+/* الحقول */
+input[type="text"], input[type="number"], input[type="password"], input[type="tel"], select, textarea {
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #6a5acd;
+    box-shadow: 0 0 8px rgba(106, 90, 205, 0.5);
+}
+
+/* النصوص والعلامات */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff; /* لون أبيض */
+}
+
+/* الأزرار */
+.btn {
+    background: linear-gradient(to right, #8e44ad, #2980b9); /* تدرج من البنفسجي إلى الأزرق */
+    color: white;
+    border-radius: 25px;
+    padding: 12px 30px;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: linear-gradient(to right, #2980b9, #8e44ad); /* تغيير التدرج عند التمرير */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* الحاوية */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* استجابة العرض */
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+
+    input[type="text"], input[type="number"], input[type="password"], input[type="tel"], select, textarea {
+        width: 100%;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 12px;
+    }
+}
+
+/* الصناديق الإحصائية */
+.stat-box {
+    background: linear-gradient(to right, #ffffff, #f4f4f9);
+    border-radius: 15px; /* حواف مستديرة بشكل أكبر */
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* تحسين الظلال */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px); /* رفع بسيط عند التمرير */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* تعزيز الظل */
+}
+
+.stat-box h4 {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #9b59b6; /* لون أرجواني */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #1abc9c; /* لون أخضر مائل إلى الأزرق */
+    text-align: right;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #00bcd4; /* اللون السمائي */
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.stat-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #34495e; /* لون رمادي مائل إلى الأزرق */
+    text-align: center;
+    margin-top: 10px;
+}
